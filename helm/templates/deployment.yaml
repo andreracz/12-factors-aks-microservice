@@ -29,6 +29,13 @@ spec:
       terminationGracePeriodSeconds: 30
       nodeSelector:
         kubernetes.io/os: linux
+      initContainers:
+      - name: "{{ .Chart.Name }}-init"
+        image: "groundnuty/k8s-wait-for:1.3"
+        imagePullPolicy: IfNotPresent
+        args: 
+        - "job"
+        - "{{ template "microservice.fullname" . }}-{{ .Release.Revision}}"        
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

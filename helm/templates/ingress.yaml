@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: {{ .Values.namespace }}
   name: {{ template "microservice.fullname" . }}
   labels:
     app: {{ template "microservice.name" . }}
