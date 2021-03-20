@@ -16,7 +16,9 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build . -t ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA .
+        pwd
+        ls -la
+        docker build -t ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA .
         docker push ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA
   deploy-dev:
     runs-on: ubuntu-latest
