@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "microservice.fullname" . }}
+  labels:
+    app: {{ template "microservice.name" . }}
+    chart: {{ template "microservice.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service: 
+            name: {{ template "microservice.fullname" . }}
+            port: {{ .Values.service.httpPort | default 80 }}
+        path: {{ .Values.service.ingressPath }}
+        pathType: Prefix
