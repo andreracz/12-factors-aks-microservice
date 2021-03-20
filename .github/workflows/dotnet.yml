@@ -36,7 +36,7 @@ jobs:
         helm upgrade todo-microservices ./helm -i --atomic -n ${{ secrets.NAMESPACE }}
         --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
         --set image.tag=${{ github.sha }}
-        --set config.ConnectionStrings__TodoContext=${{ secrets.PG_CONNECTION_STRING }}
+        --set configs.ConnectionStrings__TodoContext=${{ secrets.PG_CONNECTION_STRING }}
         
         
     
