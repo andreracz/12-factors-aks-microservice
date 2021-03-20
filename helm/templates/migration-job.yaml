@@ -20,7 +20,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ["dotnet"]
-        args: ["aks-12-factors-microservice.dll", "-- migrate"]
+        args: ["aks-12-factors-microservice.dll", "--migrate"]
         envFrom:
           - configMapRef:
               name: {{ template "microservice.fullname" . }}
