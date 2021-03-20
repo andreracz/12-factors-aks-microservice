@@ -1,0 +1,12 @@
+GET https://localhost:5001/todo
+
+
+###
+POST https://localhost:5001/todo
+Content-Type: application/json
+
+{
+	"title": "oi3",
+	"description": "oi3",
+	"complete": true
+}
