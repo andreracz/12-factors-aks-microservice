@@ -17,8 +17,6 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        pwd
-        ls -la
         docker build -t ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA .
         docker push ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA
   deploy-dev:
@@ -26,6 +24,7 @@ jobs:
     environment: dev
     needs: build
     steps:
+    - uses: actions/checkout@v2       
     - uses: azure/aks-set-context@v1
       with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
@@ -35,7 +34,6 @@ jobs:
       uses: 'deliverybot/helm@v1'
       with:
         release: 'todo-microservices'
-        track: stable
         namespace: '${{ secrets.NAMESPACE }}'
         chart: './helm'
         version: ${{ github.sha }}
@@ -43,3 +41,5 @@ jobs:
               image.repository:${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
               image.tag:${{ github.sha }}
               config.ConnectionStrings__TodoContext:${{ secrets.PG_CONNECTION_STRING }}
+        env:
+           KUBECONFIG_FILE: '$KUBECONFIG'
