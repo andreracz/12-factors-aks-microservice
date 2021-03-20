@@ -1,0 +1,42 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+          login-server: ${{ secrets.CONTAINER_REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: build
+    steps:
+    - uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: techbeeraks
+          resource-group: 12-factors
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v1'
+      with:
+        release: 'todo-microservices'
+        track: stable
+        namespace: '${{ secrets.NAMESPACE }}'
+        chart: './helm'
+        version: ${{ github.sha }}
+        values: |
+              image.repository:${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
+              image.tag:${{ github.sha }}
+              config.ConnectionStrings__TodoContext:${{ secrets.PG_CONNECTION_STRING }}
