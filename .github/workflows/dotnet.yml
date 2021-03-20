@@ -32,9 +32,10 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
           cluster-name: techbeeraks
           resource-group: 12-factors
-    - run:  helm upgrade -i --atomic -n ${{ secrets.NAMESPACE }} \
-              --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice \
-              --set image.tag=${{ github.sha }} \
-              --set config.ConnectionStrings__TodoContext=${{ secrets.PG_CONNECTION_STRING }} \
-              todo-microservices ./helm 
+    - run:  > 
+        helm upgrade -i --atomic -n ${{ secrets.NAMESPACE }} 
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice 
+          --set image.tag=${{ github.sha }} 
+          --set config.ConnectionStrings__TodoContext=${{ secrets.PG_CONNECTION_STRING }} 
+          todo-microservices ./helm 
         
