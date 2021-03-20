@@ -24,4 +24,4 @@ spec:
         envFrom:
           - configMapRef:
               name: {{ template "microservice.fullname" . }}
-      restartPolicy: never
+      restartPolicy: Never
