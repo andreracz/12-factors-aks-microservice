@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: IfNotPresent
         command: ["dotnet"]
         args: ["aks-12-factors-microservice.dll", "-- migrate"]
-          envFrom:
+        envFrom:
           - configMapRef:
               name: {{ template "microservice.fullname" . }}
       restartPolicy: never
