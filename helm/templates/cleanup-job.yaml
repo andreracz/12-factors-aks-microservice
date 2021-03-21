@@ -1,0 +1,31 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "microservice.fullname" . }}-{{ .Release.Revision}}
+  labels:
+    app: {{ template "microservice.name" . }}
+    chart: {{ template "microservice.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: "*/10 * * * *" # every 10 minutes
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+        backoffLimit: 0 # try only once
+        template:
+            metadata:
+            labels:
+                app: {{ template "microservice.name" . }}
+                release: {{ .Release.Name }}
+            spec:
+            containers:
+            - name: {{ .Chart.Name }}
+                image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+                imagePullPolicy: IfNotPresent
+                command: ["dotnet"]
+                args: ["aks-12-factors-microservice.dll", "--purgeComplete"]
+                envFrom:
+                - configMapRef:
+                    name: {{ template "microservice.fullname" . }}
+            restartPolicy: Never
