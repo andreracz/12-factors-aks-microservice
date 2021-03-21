@@ -37,6 +37,24 @@ jobs:
         --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
         --set image.tag=${{ github.sha }}
         --set configs.ConnectionStrings__TodoContext="${{ secrets.PG_CONNECTION_STRING }}"
-        
+  deploy-hom:
+    runs-on: ubuntu-latest
+    environment: hom
+    needs: deploy-dev
+    steps:
+    - uses: actions/checkout@v2       
+    - uses: azure/setup-kubectl@v1
+    - uses: azure/setup-helm@v1
+    - uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: techbeeraks
+          resource-group: 12-factors
+    - run: >
+        helm upgrade todo-microservices ./helm -i --atomic -n ${{ secrets.NAMESPACE }}
+        --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
+        --set image.tag=${{ github.sha }}
+        --set configs.ConnectionStrings__TodoContext="${{ secrets.PG_CONNECTION_STRING }}"
+            
         
     
