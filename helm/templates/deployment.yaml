@@ -46,24 +46,6 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.service.httpPort | default 80 }}
-              protocol: TCP
-          readinessProbe:
-            httpGet:
-                path: /health
-                port: 80
-                periodSeconds: 10
-                failureThreshold: 1              
-          livenessProbe:
-            httpGet:
-                path: /health
-                port: 80
-                periodSeconds: 10
-                failureThreshold: 1
-          startupProbe:
-            httpGet:
-                path: /health
-                port: 80
-            failureThreshold: 10
-            periodSeconds: 10            
+              protocol: TCP           
           resources:
 {{ toYaml .Values.resources | indent 12 }}
