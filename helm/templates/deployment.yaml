@@ -47,14 +47,14 @@ spec:
             httpGet:
                 path: /health
                 port: 80
-                periodSeconds: 10
-                failureThreshold: 1              
+            periodSeconds: 10
+            failureThreshold: 1              
           livenessProbe:
             httpGet:
                 path: /health
                 port: 80
-                periodSeconds: 10
-                failureThreshold: 1
+            periodSeconds: 10
+            failureThreshold: 1
           startupProbe:
             httpGet:
                 path: /health
