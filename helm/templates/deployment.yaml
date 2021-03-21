@@ -43,19 +43,6 @@ spec:
           envFrom:
           - configMapRef:
               name: {{ template "microservice.fullname" . }}
-          readinessProbe:
-            httpGet:
-                path: /health
-                port: 80
-            periodSeconds: 10
-            failureThreshold: 1              
-          livenessProbe:
-            httpGet:
-                path: /health
-                port: 80
-            periodSeconds: 10
-            failureThreshold: 1
-
            ports:
             - name: http
               containerPort: {{ .Values.service.httpPort | default 80 }}
