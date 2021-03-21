@@ -19,7 +19,7 @@ jobs:
     - run: |
         docker build -t ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA .
         docker push ${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice:$GITHUB_SHA
-  deploy-dev:
+  release-dev:
     runs-on: ubuntu-latest
     environment: dev
     needs: build
@@ -37,10 +37,11 @@ jobs:
         --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
         --set image.tag=${{ github.sha }}
         --set configs.ConnectionStrings__TodoContext="${{ secrets.PG_CONNECTION_STRING }}"
-  deploy-hom:
+        --set service.ingressPath="${{ secrets.INGRESS_PATH }}"        
+  release-hom:
     runs-on: ubuntu-latest
     environment: hom
-    needs: deploy-dev
+    needs: release-dev
     steps:
     - uses: actions/checkout@v2       
     - uses: azure/setup-kubectl@v1
@@ -55,6 +56,7 @@ jobs:
         --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/aks-12-factor-microservice
         --set image.tag=${{ github.sha }}
         --set configs.ConnectionStrings__TodoContext="${{ secrets.PG_CONNECTION_STRING }}"
+        --set service.ingressPath="${{ secrets.INGRESS_PATH }}"
             
         
     
