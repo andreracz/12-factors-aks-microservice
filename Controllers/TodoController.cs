@@ -25,12 +25,14 @@ namespace aks_12_factors_microservice.Controllers
         [HttpGet]
         public IEnumerable<Todo> Get()
         {
+            _logger.LogInformation("Getting TODOs");
 			return this._context.Todos.OrderBy( todo => todo.Id).AsEnumerable();
         }
 
 		[HttpPost]  
 		public Todo Post([FromBody] Todo todo)
         {
+            _logger.LogInformation("Adding new Todo");
 			this._context.Todos.Add(todo);
 			this._context.SaveChanges();
 			return todo;
@@ -40,8 +42,10 @@ namespace aks_12_factors_microservice.Controllers
 		[Route("{id}")]
 		public Todo Put([FromRoute] int id, [FromBody] Todo todo)
         {
+            _logger.LogInformation("Saving todo");
 			Todo oldTodo = this._context.Todos.Find(id);
 			if (oldTodo == null) {
+                _logger.LogInformation("Todo not found");
 				throw new Exception("Not found");
 			}
 			oldTodo.Title = todo.Title;

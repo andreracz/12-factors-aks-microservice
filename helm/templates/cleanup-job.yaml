@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ template "microservice.fullname" . }}-{{ .Release.Revision}}
+  name: {{ template "microservice.fullname" . }}-cron-{{ .Release.Revision}}
   labels:
     app: {{ template "microservice.name" . }}
     chart: {{ template "microservice.chart" . }}
