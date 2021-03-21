@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using aks_12_factors_microservice.Repository;
+using aks_12_factors_microservice.Service;
+
 
 
 namespace aks_12_factors_microservice
@@ -29,7 +31,10 @@ namespace aks_12_factors_microservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+           
+           services.AddHostedService<ShutdownService>();
+           
+           services.Configure<HostOptions>(opts => opts.ShutdownTimeout = TimeSpan.FromSeconds(100));
 
 
 			services.AddCors(o => o.AddPolicy("AllowAll", builder =>

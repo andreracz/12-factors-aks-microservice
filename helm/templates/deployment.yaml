@@ -26,7 +26,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.service.httpPort | default 80 }}"
     spec:
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 60
       nodeSelector:
         kubernetes.io/os: linux
       initContainers:
@@ -47,5 +47,23 @@ spec:
             - name: http
               containerPort: {{ .Values.service.httpPort | default 80 }}
               protocol: TCP
+         readinessProbe:
+            httpGet:
+                path: /health
+                port: 80
+                periodSeconds: 10
+                failureThreshold: 1              
+          livenessProbe:
+            httpGet:
+                path: /health
+                port: 80
+                periodSeconds: 10
+                failureThreshold: 1
+            startupProbe:
+                httpGet:
+                    path: /health
+                    port: 80
+                failureThreshold: 10
+                periodSeconds: 10            
           resources:
 {{ toYaml .Values.resources | indent 12 }}
